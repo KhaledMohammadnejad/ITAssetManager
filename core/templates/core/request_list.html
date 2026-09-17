@@ -1,0 +1,766 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Requests - IT Asset Manager System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f7;
+            color: #333;
+        }
+
+        /* =========================
+           HEADER
+           ========================= */
+
+        .header {
+            height: 72px;
+            background: #1a6b65;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 28px;
+        }
+
+        .header-title {
+            font-size: 27px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .header-title .asset-a {
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        /* =========================
+           NAVIGATION
+           ========================= */
+
+        .ribbon {
+            height: 44px;
+            background: #3f4242;
+            display: flex;
+            align-items: center;
+            padding-left: 25px;
+        }
+
+        .ribbon a {
+            color: white;
+            text-decoration: none;
+            padding: 13px 20px;
+            font-size: 14px;
+        }
+
+        .ribbon a:hover {
+            background: #555858;
+        }
+
+        /* =========================
+           PAGE LAYOUT
+           ========================= */
+
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 116px);
+        }
+
+        /* =========================
+           SIDEBAR
+           ========================= */
+
+        .sidebar {
+            width: 235px;
+            background: white;
+            border-right: 1px solid #ddd;
+            padding-bottom: 30px;
+        }
+
+        .section-title {
+            background: #1a6b65;
+            color: white;
+            font-weight: bold;
+            padding: 13px 18px;
+            font-size: 15px;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 11px 20px;
+            color: #444;
+            text-decoration: none;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .menu-item:hover {
+            background: #f0f5f4;
+            color: #1a6b65;
+        }
+
+        .menu-item.active {
+            background: #e8f2f1;
+            color: #1a6b65;
+            font-weight: bold;
+            border-left: 4px solid #1a6b65;
+            padding-left: 16px;
+        }
+
+        /* =========================
+           MAIN CONTENT
+           ========================= */
+
+        .main {
+            flex: 1;
+            padding: 28px 32px;
+            min-width: 0;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            font-size: 27px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .new-button {
+            background: #1a6b65;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .new-button:hover {
+            background: #155852;
+        }
+
+        /* =========================
+           FILTER AREA
+           ========================= */
+
+        .filter-panel {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 18px;
+            margin-bottom: 22px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 14px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-group.search-group {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            height: 38px;
+            border: 1px solid #c9cfd1;
+            border-radius: 4px;
+            padding: 0 10px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #1a6b65;
+        }
+
+        .filter-button {
+            height: 38px;
+            padding: 0 18px;
+            border: none;
+            border-radius: 4px;
+            background: #3f4242;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filter-button:hover {
+            background: #2f3131;
+        }
+
+        .clear-button {
+            height: 38px;
+            padding: 0 16px;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            background: white;
+            color: #555;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        /* =========================
+           TABLE
+           ========================= */
+
+        .table-container {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        thead {
+            background: #f0f2f2;
+        }
+
+        th {
+            text-align: left;
+            padding: 13px 14px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #555;
+            border-bottom: 1px solid #d9dddd;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #fafcfc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .request-id {
+            font-weight: bold;
+            color: #1a6b65;
+            white-space: nowrap;
+        }
+
+        .title-cell {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .requester-cell {
+            color: #444;
+        }
+
+        .unit-cell {
+            font-size: 12px;
+            color: #777;
+            margin-top: 3px;
+        }
+
+        /* =========================
+           STATUS
+           ========================= */
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-new {
+            background: #e7f1ff;
+            color: #245c9c;
+        }
+
+        .status-progress {
+            background: #fff4d6;
+            color: #8a6500;
+        }
+
+        .status-completed {
+            background: #e5f4e8;
+            color: #27743b;
+        }
+
+        .status-cancelled {
+            background: #eeeeee;
+            color: #666;
+        }
+
+        /* =========================
+           PRIORITY
+           ========================= */
+
+        .priority {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .priority.urgent {
+            color: #b3261e;
+        }
+
+        .priority.normal {
+            color: #555;
+        }
+
+        .urgent-mark {
+            font-size: 15px;
+        }
+
+        /* =========================
+           ASSET
+           ========================= */
+
+        .asset-cell {
+            color: #444;
+        }
+
+        .asset-id {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .no-asset {
+            color: #999;
+            font-style: italic;
+        }
+
+        /* =========================
+           ACTION
+           ========================= */
+
+        .view-button {
+            display: inline-block;
+            padding: 7px 13px;
+            border: 1px solid #1a6b65;
+            border-radius: 4px;
+            color: #1a6b65;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .view-button:hover {
+            background: #1a6b65;
+            color: white;
+        }
+
+        /* =========================
+           EMPTY STATE
+           ========================= */
+
+        .empty-state {
+            text-align: center;
+            padding: 55px 20px;
+            color: #777;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+        }
+
+        /* =========================
+           FOOTER INFO
+           ========================= */
+
+        .result-count {
+            margin-top: 12px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-title">
+            IT <span class="asset-a">A</span>sset Manager System
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="ribbon">
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/requests/">Requests</a>
+        <a href="/admin/">Administration</a>
+    </div>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="section-title">
+                IT Manager
+            </div>
+
+            <a href="/dashboard/" class="menu-item">
+                Dashboard
+            </a>
+
+            <a href="/requests/" class="menu-item active">
+                Requests
+            </a>
+
+            <a href="#" class="menu-item">
+                Assets
+            </a>
+
+            <a href="#" class="menu-item">
+                Reports
+            </a>
+
+            <div class="section-title">
+                IT Management
+            </div>
+
+            <a href="#" class="menu-item">
+                Categories
+            </a>
+
+            <a href="#" class="menu-item">
+                Locations
+            </a>
+
+            <a href="#" class="menu-item">
+                Personnel
+            </a>
+
+            <a href="#" class="menu-item">
+                Units
+            </a>
+
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <div class="page-heading">
+                <h1>Requests</h1>
+
+                <a href="/admin/core/request/add/" class="new-button">
+                    + New Request
+                </a>
+            </div>
+
+            <!-- FILTERS -->
+            <form method="get" class="filter-panel">
+
+                <div class="filter-row">
+
+                    <div class="filter-group search-group">
+                        <label for="search">Search</label>
+
+                        <input
+                            type="text"
+                            id="search"
+                            name="search"
+                            value="{{ search }}"
+                            placeholder="Search title, description, requester..."
+                        >
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="status">Status</label>
+
+                        <select id="status" name="status">
+                            <option value="">All Statuses</option>
+
+                            {% for value, label in status_choices %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="priority">Priority</label>
+
+                        <select id="priority" name="priority">
+                            <option value="">All Priorities</option>
+
+                            {% for value, label in priority_choices %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_priority == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <button type="submit" class="filter-button">
+                            Search
+                        </button>
+                    </div>
+
+                    {% if search or selected_status or selected_priority %}
+                        <div class="filter-group">
+                            <a href="/requests/" class="clear-button">
+                                Clear
+                            </a>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+            <!-- REQUEST TABLE -->
+            <div class="table-container">
+
+                {% if requests %}
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Requester</th>
+                                <th>Title</th>
+                                <th>Asset</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for item in requests %}
+
+                                <tr>
+
+                                    <td>
+                                        <span class="request-id">
+                                            REQ-{{ item.pk|stringformat:"06d" }}
+                                        </span>
+                                    </td>
+
+                                    <td class="requester-cell">
+
+                                        {% if item.requester_profile %}
+                                            {{ item.requester_profile.name }}
+
+                                            <div class="unit-cell">
+                                                {{ item.requester_profile.unit.name }}
+                                            </div>
+                                        {% else %}
+                                            {{ item.requester.name }}
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td class="title-cell">
+                                        {{ item.title }}
+                                    </td>
+
+                                    <td class="asset-cell">
+
+                                        {% if item.handling_records %}
+
+                                            {% with handling=item.handling_records.0 %}
+
+                                                {% if handling.asset %}
+                                                    <span class="asset-id">
+                                                        {{ handling.asset.asset_id }}
+                                                    </span>
+                                                    <br>
+                                                    {{ handling.asset.name }}
+                                                {% else %}
+                                                    <span class="no-asset">
+                                                        No asset
+                                                    </span>
+                                                {% endif %}
+
+                                            {% endwith %}
+
+                                        {% else %}
+
+                                            <span class="no-asset">
+                                                Not assigned
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if item.priority == "URGENT" %}
+
+                                            <span class="priority urgent">
+                                                <span class="urgent-mark">⚠</span>
+                                                Urgent
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="priority normal">
+                                                Normal
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if item.status == "NEW" %}
+
+                                            <span class="status status-new">
+                                                New
+                                            </span>
+
+                                        {% elif item.status == "IN_PROGRESS" %}
+
+                                            <span class="status status-progress">
+                                                In Progress
+                                            </span>
+
+                                        {% elif item.status == "COMPLETED" %}
+
+                                            <span class="status status-completed">
+                                                Completed
+                                            </span>
+
+                                        {% elif item.status == "CANCELLED" %}
+
+                                            <span class="status status-cancelled">
+                                                Cancelled
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+                                        {{ item.created_at|date:"Y-m-d" }}
+                                    </td>
+
+                                    <td>
+                                        <a
+                                            
+                                            href="{% url 'request_detail' item.pk %}"
+                                            class="view-button"
+                                            >
+                                            View
+                                        
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <div class="empty-state-title">
+                            No Requests Found
+                        </div>
+
+                        <div class="empty-state-text">
+                            There are no requests matching the selected criteria.
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="result-count">
+                Showing {{ requests|length }} request{{ requests|length|pluralize }}
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

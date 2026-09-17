@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Request Details - IT Asset Manager System</title>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f6f7;
+        color: #333;
+    }
+
+    .header {
+        height: 72px;
+        background: #1a6b65;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+    }
+
+    .header-title {
+        font-size: 27px;
+        font-weight: 600;
+    }
+
+    .header-title .asset-a {
+        font-size: 34px;
+        font-weight: 800;
+    }
+
+    .ribbon {
+        height: 44px;
+        background: #3f4242;
+        display: flex;
+        align-items: center;
+        padding-left: 25px;
+    }
+
+    .ribbon a {
+        color: white;
+        text-decoration: none;
+        padding: 13px 20px;
+        font-size: 14px;
+    }
+
+    .ribbon a:hover {
+        background: #555858;
+    }
+
+    .layout {
+        display: flex;
+        min-height: calc(100vh - 116px);
+    }
+
+    .sidebar {
+        width: 235px;
+        background: white;
+        border-right: 1px solid #ddd;
+    }
+
+    .section-title {
+        background: #1a6b65;
+        color: white;
+        font-weight: bold;
+        padding: 13px 18px;
+        font-size: 15px;
+    }
+
+    .menu-item {
+        display: block;
+        padding: 11px 20px;
+        color: #444;
+        text-decoration: none;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .menu-item:hover {
+        background: #f0f5f4;
+        color: #1a6b65;
+    }
+
+    .menu-item.active {
+        background: #e8f2f1;
+        color: #1a6b65;
+        font-weight: bold;
+        border-left: 4px solid #1a6b65;
+        padding-left: 16px;
+    }
+
+    .main {
+        flex: 1;
+        padding: 28px 32px;
+        min-width: 0;
+    }
+
+    .page-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+    }
+
+    .page-heading h1 {
+        margin: 0;
+        font-size: 27px;
+        font-weight: 600;
+    }
+
+    .back-button {
+        text-decoration: none;
+        color: #1a6b65;
+        border: 1px solid #1a6b65;
+        padding: 9px 16px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .back-button:hover {
+        background: #1a6b65;
+        color: white;
+    }
+
+    .summary-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 22px;
+        margin-bottom: 20px;
+    }
+
+    .summary-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .request-id {
+        color: #1a6b65;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 7px;
+    }
+
+    .request-title {
+        font-size: 22px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .priority {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: bold;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .urgent {
+        color: #b3261e;
+    }
+
+    .normal {
+        color: #555;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 6px 11px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-left: 12px;
+    }
+
+    .status-new {
+        background: #e7f1ff;
+        color: #245c9c;
+    }
+
+    .status-progress {
+        background: #fff4d6;
+        color: #8a6500;
+    }
+
+    .status-completed {
+        background: #e5f4e8;
+        color: #27743b;
+    }
+
+    .status-cancelled {
+        background: #eeeeee;
+        color: #666;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px 28px;
+    }
+
+    .info-item label,
+    .form-field label {
+        display: block;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #777;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+
+    .info-value {
+        font-size: 14px;
+        color: #333;
+    }
+
+    .description {
+        grid-column: 1 / -1;
+    }
+
+    .description-box {
+        background: #f8f9f9;
+        border: 1px solid #e1e4e4;
+        border-radius: 4px;
+        padding: 12px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .section {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .section-header {
+        background: #f0f2f2;
+        border-bottom: 1px solid #ddd;
+        padding: 13px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .section-body {
+        padding: 22px;
+    }
+
+    .handling-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px 28px;
+    }
+
+    .form-field select,
+    .form-field input[type="text"],
+    .form-field input[type="date"],
+    .form-field textarea {
+        width: 100%;
+        padding: 9px 10px;
+        border: 1px solid #c8cccc;
+        border-radius: 4px;
+        background: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+    }
+
+    .form-field select:focus,
+    .form-field input:focus,
+    .form-field textarea:focus {
+        outline: none;
+        border-color: #1a6b65;
+        box-shadow: 0 0 0 2px rgba(26, 107, 101, 0.10);
+    }
+
+    .field-help {
+        margin-top: 5px;
+        color: #777;
+        font-size: 12px;
+    }
+
+    .field-error {
+        margin-top: 5px;
+        color: #b3261e;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .form-errors {
+        background: #fff1f0;
+        border: 1px solid #e0a6a2;
+        border-radius: 4px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        color: #9b211b;
+        font-size: 13px;
+    }
+
+    .form-errors ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .subsection {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e1e4e4;
+    }
+
+    .subsection:first-child {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+    }
+
+    .subsection-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #1a6b65;
+        margin-bottom: 16px;
+    }
+
+    .result-field {
+        margin-top: 24px;
+    }
+
+    .result-field textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 25px;
+        margin-bottom: 30px;
+    }
+
+    .action-button {
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+    }
+
+    .primary-button {
+        background: #1a6b65;
+        color: white;
+    }
+
+    .primary-button:hover {
+        background: #155852;
+    }
+
+    .secondary-button {
+        border: 1px solid #bbb;
+        color: #555;
+        background: white;
+    }
+
+    .secondary-button:hover {
+        background: #f1f1f1;
+    }
+
+    .danger-button {
+        background: #b3261e;
+        color: white;
+    }
+
+    .danger-button:hover {
+        background: #8f1d18;
+    }
+
+    .conditional-section {
+        display: none;
+    }
+
+    #next-action-section {
+        display: none;
+    }
+
+    @media (max-width: 950px) {
+
+        .sidebar {
+            width: 190px;
+        }
+
+        .info-grid,
+        .handling-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .main {
+            padding: 22px;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+```
+<div class="header-title">
+    IT <span class="asset-a">A</span>sset Manager System
+</div>
+```
+
+</div>
+
+<div class="ribbon">
+
+```
+<a href="/dashboard/">Dashboard</a>
+<a href="/requests/">Requests</a>
+<a href="/admin/">Administration</a>
+```
+
+</div>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+```
+<div class="section-title">
+    IT Manager
+</div>
+
+<a href="/dashboard/" class="menu-item">
+    Dashboard
+</a>
+
+<a href="/requests/" class="menu-item active">
+    Requests
+</a>
+
+<a href="#" class="menu-item">
+    Assets
+</a>
+
+<a href="#" class="menu-item">
+    Reports
+</a>
+
+<div class="section-title">
+    IT Management
+</div>
+
+<a href="#" class="menu-item">
+    Categories
+</a>
+
+<a href="#" class="menu-item">
+    Locations
+</a>
+
+<a href="#" class="menu-item">
+    Personnel
+</a>
+
+<a href="#" class="menu-item">
+    Units
+</a>
+```
+
+</aside>
+
+<main class="main">
+
+```
+<div class="page-heading">
+
+    <h1>
+        Request Details
+    </h1>
+
+    <a
+        href="{% url 'request_list' %}"
+        class="back-button"
+    >
+        ← Back to Requests
+    </a>
+
+</div>
+
+
+<div class="summary-card">
+
+    <div class="summary-top">
+
+        <div>
+
+            <div class="request-id">
+                REQ-{{ request_record.pk|stringformat:"06d" }}
+            </div>
+
+            <h2 class="request-title">
+                {{ request_record.title }}
+            </h2>
+
+        </div>
+
+
+        <div>
+
+            {% if request_record.priority == "URGENT" %}
+
+                <span class="priority urgent">
+                    ⚠ Urgent
+                </span>
+
+            {% else %}
+
+                <span class="priority normal">
+                    Normal
+                </span>
+
+            {% endif %}
+
+
+            {% if request_record.status == "NEW" %}
+
+                <span class="status status-new">
+                    New
+                </span>
+
+            {% elif request_record.status == "IN_PROGRESS" %}
+
+                <span class="status status-progress">
+                    In Progress
+                </span>
+
+            {% elif request_record.status == "COMPLETED" %}
+
+                <span class="status status-completed">
+                    Completed
+                </span>
+
+            {% elif request_record.status == "CANCELLED" %}
+
+                <span class="status status-cancelled">
+                    Cancelled
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+        <div class="info-item">
+
+            <label>Requester</label>
+
+            <div class="info-value">
+
+                {% if request_record.requester_profile %}
+                    {{ request_record.requester_profile.name }}
+                {% else %}
+                    {{ request_record.requester.name }}
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <label>Unit</label>
+
+            <div class="info-value">
+
+                {% if request_record.requester_profile %}
+                    {{ request_record.requester_profile.unit.name }}
+                {% else %}
+                    {{ request_record.requester.name }}
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <label>Request Date</label>
+
+            <div class="info-value">
+                {{ request_record.created_at|date:"Y-m-d H:i" }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item description">
+
+            <label>Description</label>
+
+            <div class="description-box">
+                {{ request_record.description }}
+            </div>
+
+        </div>
+
+
+        {% if request_record.attachment %}
+
+            <div class="info-item">
+
+                <label>Attachment</label>
+
+                <div class="info-value">
+
+                    <a
+                        href="{{ request_record.attachment.url }}"
+                        target="_blank"
+                    >
+                        View Attachment
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <div class="section">
+
+        <div class="section-header">
+            Request Handling
+        </div>
+
+
+        <div class="section-body">
+
+            {% if form.non_field_errors %}
+
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+
+            {% endif %}
+
+
+            <!-- ASSET AND TECHNICIAN -->
+
+            <div class="subsection">
+
+                <div class="subsection-title">
+                    Asset &amp; Technician
+                </div>
+
+
+                <div class="handling-grid">
+
+                    <div class="form-field">
+
+                        <label for="{{ form.asset.id_for_label }}">
+                            Asset
+                        </label>
+
+                        {{ form.asset }}
+
+                        {% for error in form.asset.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Warranty Status
+                        </label>
+
+                        <div
+                            id="warranty-status"
+                            style="padding: 9px 10px; background: #f8f9f9; border: 1px solid #e1e4e4; border-radius: 4px;"
+                        >
+                            Select an asset
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label for="{{ form.technician.id_for_label }}">
+                            Technician
+                        </label>
+
+                        {{ form.technician }}
+
+                        {% for error in form.technician.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label for="{{ form.handled_date.id_for_label }}">
+                            Handled Date
+                        </label>
+
+                        {{ form.handled_date }}
+
+                        {% for error in form.handled_date.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- REPAIR INFORMATION -->
+
+            <div class="subsection">
+
+                <div class="subsection-title">
+                    Repair Information
+                </div>
+
+
+                <div class="handling-grid">
+
+                    <div class="form-field">
+
+                        <label for="{{ form.repair_location.id_for_label }}">
+                            Repair Location
+                        </label>
+
+                        {{ form.repair_location }}
+
+                        {% for error in form.repair_location.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label for="{{ form.repair_performed_by.id_for_label }}">
+                            Repair Performed By
+                        </label>
+
+                        {{ form.repair_performed_by }}
+
+                        {% for error in form.repair_performed_by.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label for="{{ form.repair_result.id_for_label }}">
+                            Repair Result
+                        </label>
+
+                        {{ form.repair_result }}
+
+                        {% for error in form.repair_result.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- NEXT ACTION -->
+
+            <div
+                id="next-action-section"
+                class="subsection"
+            >
+
+                <div class="subsection-title">
+                    Next Action
+                </div>
+
+
+                <div class="handling-grid">
+
+                    <div class="form-field">
+
+                        <label for="{{ form.next_action.id_for_label }}">
+                            Next Action
+                        </label>
+
+                        {{ form.next_action }}
+
+                        {% for error in form.next_action.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- WORKSHOP -->
+
+            <div
+                id="workshop-section"
+                class="subsection conditional-section"
+            >
+
+                <div class="subsection-title">
+                    Workshop Repair
+                </div>
+
+
+                <div class="handling-grid">
+
+                    <div class="form-field">
+
+                        <label for="{{ form.workshop_result.id_for_label }}">
+                            Workshop Result
+                        </label>
+
+                        {{ form.workshop_result }}
+
+                        {% for error in form.workshop_result.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- EXTERNAL REPAIR -->
+
+            <div
+                id="external-section"
+                class="subsection conditional-section"
+            >
+
+                <div class="subsection-title">
+                    External Repair
+                </div>
+
+
+                <div
+                    id="external-approval-field"
+                    class="form-field"
+                >
+
+                    <label for="{{ form.external_approval.id_for_label }}">
+                        Principal Approval
+                    </label>
+
+                    {{ form.external_approval }}
+
+                    {% for error in form.external_approval.errors %}
+                        <div class="field-error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <div
+                    class="handling-grid"
+                    style="margin-top: 20px;"
+                >
+
+                    <div class="form-field">
+
+                        <label for="{{ form.external_repair_result.id_for_label }}">
+                            External Repair Result
+                        </label>
+
+                        {{ form.external_repair_result }}
+
+                        {% for error in form.external_repair_result.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- REPLACEMENT -->
+
+            <div
+                id="replacement-section"
+                class="subsection conditional-section"
+            >
+
+                <div class="subsection-title">
+                    Replacement
+                </div>
+
+
+                <div class="handling-grid">
+
+                    <div class="form-field">
+
+                        <label for="{{ form.replacement_asset.id_for_label }}">
+                            Replacement Asset
+                        </label>
+
+                        {{ form.replacement_asset }}
+
+                        {% for error in form.replacement_asset.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label for="{{ form.replacement_type.id_for_label }}">
+                            Replacement Type
+                        </label>
+
+                        {{ form.replacement_type }}
+
+                        {% for error in form.replacement_type.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FINAL RESULT -->
+
+            <div class="subsection result-field">
+
+                <div class="subsection-title">
+                    Final Result
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="{{ form.result.id_for_label }}">
+                        Result / Notes
+                    </label>
+
+                    {{ form.result }}
+
+                    {% for error in form.result.errors %}
+                        <div class="field-error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="actions">
+
+        <a
+            href="{% url 'request_list' %}"
+            class="action-button secondary-button"
+        >
+            Back to Requests
+        </a>
+
+        {% if request_record.status == "NEW" or request_record.status == "IN_PROGRESS" %}
+
+            <button
+                type="submit"
+                name="cancel_request"
+                value="1"
+                class="action-button danger-button"
+                onclick="return confirm('Are you sure you want to cancel this request?');"
+            >
+                Cancel Request
+            </button>
+
+            <button
+                type="submit"
+                class="action-button primary-button"
+            >
+                Save Request Handling
+            </button>
+
+        {% endif %}
+
+    </div>
+
+</form>
+```
+
+</main>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const assetField =
+        document.getElementById("id_asset");
+
+    const warrantyStatus =
+        document.getElementById("warranty-status");
+
+    const repairResultField =
+        document.getElementById("id_repair_result");
+
+    const nextActionSection =
+        document.getElementById("next-action-section");
+
+    const nextActionField =
+        document.getElementById("id_next_action");
+
+    const workshopSection =
+        document.getElementById("workshop-section");
+
+    const workshopResultField =
+        document.getElementById("id_workshop_result");
+
+    const externalSection =
+        document.getElementById("external-section");
+
+    const externalApprovalField =
+        document.getElementById("id_external_approval");
+
+    const externalApprovalContainer =
+        document.getElementById("external-approval-field");
+
+    const externalRepairResultField =
+        document.getElementById("id_external_repair_result");
+
+    const replacementSection =
+        document.getElementById("replacement-section");
+
+    const replacementAssetField =
+        document.getElementById("id_replacement_asset");
+
+    const replacementTypeField =
+        document.getElementById("id_replacement_type");
+
+
+    function getWarrantyStatus() {
+
+        if (!assetField) {
+            return "";
+        }
+
+        const selectedOption =
+            assetField.options[assetField.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+            return "";
+        }
+
+        return selectedOption.getAttribute(
+            "data-warranty-status"
+        ) || "No Warranty";
+
+    }
+
+
+    function updateWarrantyStatus() {
+
+        if (!assetField || !warrantyStatus) {
+            return;
+        }
+
+        const selectedOption =
+            assetField.options[assetField.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+
+            warrantyStatus.textContent =
+                "Select an asset";
+
+            return;
+
+        }
+
+        const warranty =
+            selectedOption.getAttribute(
+                "data-warranty-status"
+            );
+
+        warrantyStatus.textContent =
+            warranty || "No Warranty";
+
+    }
+
+
+    function clearWorkshop() {
+
+        if (workshopResultField) {
+            workshopResultField.value = "";
+        }
+
+    }
+
+
+    function clearExternalRepair() {
+
+        if (externalApprovalField) {
+            externalApprovalField.value = "NOT_REQUIRED";
+        }
+
+        if (externalRepairResultField) {
+            externalRepairResultField.value = "";
+        }
+
+    }
+
+
+    function clearReplacement() {
+
+        if (replacementAssetField) {
+            replacementAssetField.value = "";
+        }
+
+        if (replacementTypeField) {
+            replacementTypeField.value = "";
+        }
+
+    }
+
+
+    function clearAllFurtherActions() {
+
+        if (nextActionField) {
+            nextActionField.value = "NONE";
+        }
+
+        clearWorkshop();
+        clearExternalRepair();
+        clearReplacement();
+
+    }
+
+
+    function updateExternalApproval() {
+
+        if (
+            !externalApprovalContainer ||
+            !externalApprovalField
+        ) {
+            return;
+        }
+
+        const warranty =
+            getWarrantyStatus();
+
+        /*
+         * Principal Approval is relevant when
+         * external repair is required and the
+         * asset has no valid warranty.
+         */
+
+        if (
+            warranty === "No Warranty" ||
+            warranty === "Expired"
+        ) {
+
+            externalApprovalContainer.style.display =
+                "block";
+
+        } else {
+
+            externalApprovalContainer.style.display =
+                "none";
+
+            externalApprovalField.value =
+                "NOT_REQUIRED";
+
+        }
+
+    }
+
+
+    function updateConditionalSections() {
+
+        if (
+            !repairResultField ||
+            !nextActionSection
+        ) {
+            return;
+        }
+
+        const repairResult =
+            repairResultField.value;
+
+
+        /*
+         * Successful repair:
+         * the request is finished.
+         */
+
+        if (repairResult === "REPAIRED") {
+
+            nextActionSection.style.display =
+                "none";
+
+            workshopSection.style.display =
+                "none";
+
+            externalSection.style.display =
+                "none";
+
+            replacementSection.style.display =
+                "none";
+
+            clearAllFurtherActions();
+
+            return;
+
+        }
+
+
+        /*
+         * Unsuccessful repair:
+         * IT Manager must decide what happens next.
+         */
+
+        if (
+            repairResult === "NOT_REPAIRED" ||
+            repairResult === "FURTHER_ACTION"
+        ) {
+
+            nextActionSection.style.display =
+                "block";
+
+        } else {
+
+            nextActionSection.style.display =
+                "none";
+
+            clearAllFurtherActions();
+
+            return;
+
+        }
+
+
+        const nextAction =
+            nextActionField
+                ? nextActionField.value
+                : "NONE";
+
+
+        workshopSection.style.display =
+            nextAction === "WORKSHOP"
+                ? "block"
+                : "none";
+
+
+        externalSection.style.display =
+            nextAction === "EXTERNAL"
+                ? "block"
+                : "none";
+
+
+        replacementSection.style.display =
+            nextAction === "REPLACEMENT"
+                ? "block"
+                : "none";
+
+
+        /*
+         * Workshop can determine that replacement
+         * is required.
+         */
+
+        if (
+            nextAction === "WORKSHOP" &&
+            workshopResultField &&
+            workshopResultField.value === "REPLACEMENT"
+        ) {
+
+            replacementSection.style.display =
+                "block";
+
+        }
+
+
+        /*
+         * If Workshop is not active, remove
+         * old Workshop values.
+         */
+
+        if (nextAction !== "WORKSHOP") {
+            clearWorkshop();
+        }
+
+
+        /*
+         * If External Repair is not active,
+         * remove old external values.
+         */
+
+        if (nextAction !== "EXTERNAL") {
+            clearExternalRepair();
+        }
+
+
+        /*
+         * If Replacement is not active and
+         * Workshop did not require replacement,
+         * remove old replacement values.
+         */
+
+        const workshopRequiresReplacement =
+            nextAction === "WORKSHOP" &&
+            workshopResultField &&
+            workshopResultField.value === "REPLACEMENT";
+
+        if (
+            nextAction !== "REPLACEMENT" &&
+            !workshopRequiresReplacement
+        ) {
+            clearReplacement();
+        }
+
+
+        updateExternalApproval();
+
+    }
+
+
+    /*
+     * Asset / Warranty
+     */
+
+    if (assetField) {
+
+        assetField.addEventListener(
+            "change",
+            function () {
+
+                updateWarrantyStatus();
+
+                updateExternalApproval();
+
+            }
+        );
+
+        updateWarrantyStatus();
+
+    }
+
+
+    /*
+     * Repair Result
+     */
+
+    if (repairResultField) {
+
+        repairResultField.addEventListener(
+            "change",
+            updateConditionalSections
+        );
+
+    }
+
+
+    /*
+     * Next Action
+     */
+
+    if (nextActionField) {
+
+        nextActionField.addEventListener(
+            "change",
+            updateConditionalSections
+        );
+
+    }
+
+
+    /*
+     * Workshop Result
+     */
+
+    if (workshopResultField) {
+
+        workshopResultField.addEventListener(
+            "change",
+            updateConditionalSections
+        );
+
+    }
+
+
+    /*
+     * Initial page state
+     */
+
+    updateWarrantyStatus();
+    updateConditionalSections();
+
+});
+
+</script>
+
+</body>
+
+</html>

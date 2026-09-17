@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Location - IT Asset Manager</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f6;
+            color: #333;
+        }
+
+        /* -------------------------------------------------
+           Header
+        ------------------------------------------------- */
+
+        .header {
+            background: #1a6b65;
+            color: white;
+            padding: 18px 30px;
+        }
+
+        .header-title {
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .header-subtitle {
+            margin-top: 4px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* -------------------------------------------------
+           Navigation Ribbon
+        ------------------------------------------------- */
+
+        .ribbon {
+            background: #3f4242;
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            min-height: 48px;
+        }
+
+        .ribbon a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            font-size: 14px;
+        }
+
+        .ribbon a:hover {
+            background: #555858;
+        }
+
+        /* -------------------------------------------------
+           Main Content
+        ------------------------------------------------- */
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 25px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #1a6b65;
+            margin-bottom: 8px;
+        }
+
+        .page-description {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        /* -------------------------------------------------
+           Form Card
+        ------------------------------------------------- */
+
+        .form-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-row {
+            margin-bottom: 22px;
+        }
+
+        .form-row label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .required {
+            color: #b3261e;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #c9cece;
+            border-radius: 5px;
+            font-size: 15px;
+            background: white;
+        }
+
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #1a6b65;
+            box-shadow: 0 0 0 2px rgba(26, 107, 101, 0.12);
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .help-text {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        /* -------------------------------------------------
+           Errors
+        ------------------------------------------------- */
+
+        .error-box {
+            background: #fdecec;
+            border: 1px solid #e3a4a4;
+            border-radius: 5px;
+            padding: 14px 18px;
+            margin-bottom: 22px;
+            color: #9b1c1c;
+        }
+
+        .error-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        /* -------------------------------------------------
+           Buttons
+        ------------------------------------------------- */
+
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid #e1e4e4;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 22px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .button-save {
+            background: #1a6b65;
+            color: white;
+        }
+
+        .button-save:hover {
+            background: #145650;
+        }
+
+        .button-cancel {
+            background: #e3e6e6;
+            color: #333;
+        }
+
+        .button-cancel:hover {
+            background: #d4d8d8;
+        }
+
+        /* -------------------------------------------------
+           Responsive
+        ------------------------------------------------- */
+
+        @media (max-width: 700px) {
+            .header {
+                padding: 15px 18px;
+            }
+
+            .ribbon {
+                padding: 0 10px;
+                flex-wrap: wrap;
+            }
+
+            .ribbon a {
+                padding: 12px 10px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 0 15px;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- =================================================
+         HEADER
+    ================================================== -->
+
+    <div class="header">
+        <div class="header-title">IT Asset Manager</div>
+        <div class="header-subtitle">IT Manager Information and Control System</div>
+    </div>
+
+    <!-- =================================================
+         NAVIGATION
+    ================================================== -->
+
+    <div class="ribbon">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'location_management' %}">Locations</a>
+        <a href="{% url 'request_list' %}">Requests</a>
+    </div>
+
+    <!-- =================================================
+         CONTENT
+    ================================================== -->
+
+    <div class="container">
+
+        <div class="page-title">
+            Add Location
+        </div>
+
+        <div class="page-description">
+            Add a new building, floor, room, area, or outdoor location
+            to the IT Asset Manager location hierarchy.
+        </div>
+
+        <div class="form-card">
+
+            {% if errors %}
+                <div class="error-box">
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <!-- Location Name -->
+
+                <div class="form-row">
+                    <label for="name">
+                        Location Name
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value="{{ form_name }}"
+                        placeholder="e.g. Building 2, Floor 1, Server Room"
+                        required
+                    >
+                </div>
+
+                <!-- Location Type -->
+
+                <div class="form-row">
+                    <label for="location_type">
+                        Location Type
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="location_type"
+                        name="location_type"
+                        required
+                    >
+                        {% for value, label in location_types %}
+                            <option
+                                value="{{ value }}"
+                                {% if form_type == value %}selected{% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="help-text">
+                        Choose the type that best describes this location.
+                    </div>
+                </div>
+
+                <!-- Parent Location -->
+
+                <div class="form-row">
+                    <label for="parent">
+                        Parent Location
+                    </label>
+
+                    <select
+                        id="parent"
+                        name="parent"
+                    >
+                        <option value="">
+                            — No Parent / Top Level —
+                        </option>
+
+                        {% for location in active_locations %}
+                            <option
+                                value="{{ location.id }}"
+                                {% if form_parent == location.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ location.name }}
+                                ({{ location.get_location_type_display }})
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="help-text">
+                        For example, a floor can belong to a building,
+                        and a room can belong to a floor.
+                    </div>
+                </div>
+
+                <!-- Description -->
+
+                <div class="form-row">
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Optional description or additional information..."
+                    >{{ form_description }}</textarea>
+                </div>
+
+                <!-- Buttons -->
+
+                <div class="button-row">
+
+                    <button
+                        type="submit"
+                        class="button button-save"
+                    >
+                        Save Location
+                    </button>
+
+                    <a
+                        href="{% url 'location_management' %}"
+                        class="button button-cancel"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

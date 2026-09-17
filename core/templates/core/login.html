@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Asset Manager System - Login</title>
+
+```
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f6;
+        margin: 0;
+        min-height: 100vh;
+        color: #333;
+    }
+
+    /* =========================
+       HEADER
+       ========================= */
+
+    .header {
+        background: #1a6b65;
+        color: white;
+        padding: 22px 20px;
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 0.3px;
+    }
+
+    /* =========================
+       LOGIN AREA
+       ========================= */
+
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 65px 20px;
+    }
+
+    .login-box {
+        width: 430px;
+        background: white;
+        padding: 35px 40px 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+        border-top: 5px solid #1a6b65;
+    }
+
+    /* =========================
+       LOGO
+       ========================= */
+
+    .logo {
+        width: 86px;
+        height: 86px;
+        margin: 0 auto 18px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logo-shield {
+        width: 68px;
+        height: 76px;
+        background: #1a6b65;
+        clip-path: polygon(
+            50% 0%,
+            92% 14%,
+            92% 53%,
+            78% 76%,
+            50% 100%,
+            22% 76%,
+            8% 53%,
+            8% 14%
+        );
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logo-inner {
+        width: 50px;
+        height: 48px;
+        position: relative;
+    }
+
+    /* Server symbol */
+    .server {
+        position: absolute;
+        width: 42px;
+        height: 12px;
+        left: 4px;
+        background: white;
+        border-radius: 2px;
+        box-shadow:
+            0 17px 0 white,
+            0 34px 0 white;
+    }
+
+    .server::before,
+    .server::after {
+        content: "";
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: #1a6b65;
+        border-radius: 50%;
+        left: 6px;
+        top: 3px;
+        box-shadow:
+            10px 0 0 #1a6b65,
+            20px 0 0 #1a6b65;
+    }
+
+    /* Check mark */
+    .check {
+        position: absolute;
+        width: 21px;
+        height: 11px;
+        border-left: 4px solid #1a6b65;
+        border-bottom: 4px solid #1a6b65;
+        transform: rotate(-45deg);
+        left: 19px;
+        top: 18px;
+        z-index: 2;
+    }
+
+    /* =========================
+       TITLE
+       ========================= */
+
+    h2 {
+        text-align: center;
+        margin: 0 0 28px;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #777;
+        font-size: 14px;
+        margin-top: -18px;
+        margin-bottom: 25px;
+    }
+
+    /* =========================
+       FORM
+       ========================= */
+
+    label {
+        display: block;
+        margin-top: 17px;
+        margin-bottom: 7px;
+        font-weight: bold;
+        color: #444;
+        font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px 13px;
+        border: 1px solid #c9cece;
+        border-radius: 5px;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        border-color: #1a6b65;
+        box-shadow: 0 0 0 2px rgba(26, 107, 101, 0.12);
+    }
+
+    /* =========================
+       ERROR MESSAGE
+       ========================= */
+
+    .error {
+        color: #a00000;
+        background: #fff1f1;
+        border: 1px solid #e2b8b8;
+        padding: 10px 12px;
+        border-radius: 5px;
+        margin-bottom: 18px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    /* =========================
+       LOGIN BUTTON
+       ========================= */
+
+    button {
+        width: 100%;
+        margin-top: 28px;
+        padding: 13px;
+        background: #1a6b65;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+        background: #155a55;
+    }
+
+    button:active {
+        transform: translateY(1px);
+    }
+
+    /* =========================
+       FOOTER
+       ========================= */
+
+    .footer {
+        text-align: center;
+        margin-top: 24px;
+        color: #888;
+        font-size: 12px;
+    }
+
+    /* =========================
+       RESPONSIVE
+       ========================= */
+
+    @media (max-width: 520px) {
+        .header {
+            font-size: 23px;
+        }
+
+        .login-container {
+            padding: 35px 15px;
+        }
+
+        .login-box {
+            width: 100%;
+            padding: 30px 25px 35px;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<div class="header">
+    IT Asset Manager System
+</div>
+
+<div class="login-container">
+
+    <div class="login-box">
+
+        <!-- IT Asset Manager Logo -->
+        <div class="logo">
+            <div class="logo-shield">
+                <div class="logo-inner">
+                    <div class="server"></div>
+                    <div class="check"></div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Login</h2>
+
+        <div class="subtitle">
+            Secure access to the IT Asset Manager System
+        </div>
+
+        {% if form.errors %}
+            <div class="error">
+                Please enter a valid username and password.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="id_username">Username</label>
+
+            <input
+                type="text"
+                name="username"
+                id="id_username"
+                required
+                autofocus
+                autocomplete="username"
+            >
+
+            <label for="id_password">Password</label>
+
+            <input
+                type="password"
+                name="password"
+                id="id_password"
+                required
+                autocomplete="current-password"
+            >
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="footer">
+            IT Asset Manager System
+        </div>
+
+    </div>
+
+</div>
+```
+
+</body>
+</html>

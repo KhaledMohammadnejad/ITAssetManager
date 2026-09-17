@@ -1,0 +1,30 @@
+
+{% for node in locations %}
+
+    <div class="location-node">
+
+        <div class="location-card">
+            <div class="location-name">
+                {{ node.location.name }}
+
+                <span class="location-type">
+                    {{ node.location.get_location_type_display }}
+                </span>
+            </div>
+
+            {% if node.location.description %}
+                <div class="location-description">
+                    {{ node.location.description }}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if node.children %}
+            <div class="children">
+                {% include "core/location_tree.html" with locations=node.children %}
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endfor %}

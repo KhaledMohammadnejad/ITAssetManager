@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Requester - IT Asset Manager System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f6;
+            margin: 0;
+        }
+
+        .header {
+            background: #1a6b65;
+            color: white;
+            padding: 20px 30px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .user-info,
+        .request-box,
+        .my-requests {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .info-row {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+
+        .label {
+            font-weight: bold;
+            display: inline-block;
+            width: 100px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 11px 22px;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .submit-button {
+            background: #1a6b65;
+            color: white;
+        }
+
+        .print-button {
+            background: #666;
+            color: white;
+        }
+
+        .logout-button {
+            float: right;
+            background: white;
+            color: #1a6b65;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #3f4242;
+            color: white;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .no-requests {
+            color: #666;
+            margin-top: 15px;
+        }
+
+        @media print {
+            .header form,
+            .request-box,
+            .my-requests {
+                display: none;
+            }
+
+            .container {
+                width: 100%;
+                margin: 0;
+            }
+
+            .user-info {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    IT Asset Manager System
+
+    <form method="post" action="/logout/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</div>
+
+<div class="container">
+
+    <div class="user-info">
+        <h2>Requester Information</h2>
+
+        <div class="info-row">
+            <span class="label">Name:</span>
+            {{ requester.name }}
+        </div>
+
+        <div class="info-row">
+            <span class="label">Unit:</span>
+            {{ requester.unit.name }}
+        </div>
+    </div>
+
+
+    <div class="request-box">
+
+        <h2>New Request</h2>
+
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <label for="title">Request Title</label>
+            <input
+                type="text"
+                id="title"
+                name="title"
+                maxlength="200"
+                required
+            >
+
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                name="description"
+                required
+            ></textarea>
+
+            <label for="attachment">Attachment (optional)</label>
+            <input
+                type="file"
+                id="attachment"
+                name="attachment"
+            >
+
+            <div class="buttons">
+
+                <button type="submit" class="submit-button">
+                    Submit Request
+                </button>
+
+                <button
+                    type="button"
+                    class="print-button"
+                    onclick="window.print();"
+                >
+                    Print Request
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <div class="my-requests">
+
+        <h2>My Requests</h2>
+
+        {% if my_requests %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for req in my_requests %}
+
+                        <tr>
+                            <td>{{ req.id }}</td>
+
+                            <td>
+                                {{ req.created_at|date:"Y-m-d H:i" }}
+                            </td>
+
+                            <td>
+                                {{ req.title }}
+                            </td>
+
+                            <td>
+                                {{ req.description }}
+                            </td>
+
+                            <td class="status">
+                                {{ req.get_status_display }}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% else %}
+
+            <div class="no-requests">
+                You have no requests.
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

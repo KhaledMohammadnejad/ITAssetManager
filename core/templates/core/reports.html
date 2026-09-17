@@ -1,0 +1,1831 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports - IT Asset Manager</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f3f5f6;
+        color: #303638;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+        height: 78px;
+        background: #1a6b65;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 35px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .brand-a {
+        font-size: 52px;
+        font-weight: 900;
+        line-height: 1;
+        color: #e68729;
+    }
+
+    .brand-text {
+        font-size: 27px;
+        font-weight: bold;
+        letter-spacing: 0.2px;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .ribbon {
+        background: #3f4242;
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+    }
+
+    .nav-item {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 17px 22px;
+        font-size: 15px;
+        font-weight: bold;
+        transition: background 0.2s ease;
+    }
+
+    .nav-item:hover {
+        background: #555959;
+    }
+
+    .nav-item.active {
+        background: #1a6b65;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .container {
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 0 25px 50px;
+    }
+
+    .page-title {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #263638;
+    }
+
+    .page-subtitle {
+        color: #687477;
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
+
+    /* =========================
+       REPORT GENERATOR
+    ========================= */
+
+    .generator-card,
+    .results-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 9px rgba(0,0,0,0.08);
+        border: 1px solid #e0e4e5;
+        overflow: hidden;
+    }
+
+    .generator-card {
+        margin-bottom: 25px;
+    }
+
+    .card-header {
+        background: #f7f8f8;
+        border-bottom: 1px solid #dfe3e4;
+        padding: 17px 22px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #1a6b65;
+    }
+
+    .card-header span {
+        color: #687477;
+        font-size: 13px;
+        font-weight: normal;
+        margin-left: 8px;
+    }
+
+    .generator-body {
+        padding: 23px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-size: 13px;
+        font-weight: bold;
+        color: #4a5557;
+        margin-bottom: 7px;
+    }
+
+    select,
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cbd2d4;
+        border-radius: 5px;
+        background: white;
+        padding: 0 12px;
+        font-size: 14px;
+        color: #303638;
+        outline: none;
+    }
+
+    select:focus,
+    input[type="text"]:focus,
+    input[type="date"]:focus {
+        border-color: #1a6b65;
+        box-shadow: 0 0 0 2px rgba(26,107,101,0.10);
+    }
+
+    .filter-section {
+        display: none;
+        margin-top: 22px;
+        padding-top: 22px;
+        border-top: 1px solid #e3e6e7;
+    }
+
+    .filter-section.visible {
+        display: block;
+    }
+
+    .filter-title {
+        color: #1a6b65;
+        font-size: 15px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .button-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 5px;
+        padding: 11px 22px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-generate {
+        background: #1a6b65;
+        color: white;
+    }
+
+    .btn-generate:hover {
+        background: #145650;
+    }
+
+    .btn-clear {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-clear:hover {
+        background: #5a6268;
+    }
+
+    .btn-print {
+        background: #e68729;
+        color: white;
+    }
+
+    .btn-print:hover {
+        background: #cf741d;
+    }
+
+    /* =========================
+       RESULTS
+    ========================= */
+
+    .results-header {
+        padding: 17px 22px;
+        border-bottom: 1px solid #dfe3e4;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .results-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #1a6b65;
+    }
+
+    .results-description {
+        color: #687477;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .results-count {
+        color: #687477;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 850px;
+    }
+
+    th {
+        background: #3f4242;
+        color: white;
+        text-align: left;
+        padding: 13px 14px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #e3e6e7;
+        font-size: 13px;
+        vertical-align: middle;
+    }
+
+    tbody tr:nth-child(even) {
+        background: #f8f9f9;
+    }
+
+    tbody tr:hover {
+        background: #eef5f4;
+    }
+
+    .asset-id {
+        color: #1a6b65;
+        font-weight: bold;
+    }
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .status-active,
+    .status-completed {
+        background: #e5f3ee;
+        color: #18704e;
+    }
+
+    .status-repair,
+    .status-progress {
+        background: #fff0dc;
+        color: #a45c0d;
+    }
+
+    .status-storage {
+        background: #e9edf2;
+        color: #586575;
+    }
+
+    .status-retired,
+    .status-cancelled {
+        background: #f0e5e5;
+        color: #8a4242;
+    }
+
+    .status-new {
+        background: #e5f1f7;
+        color: #27637c;
+    }
+
+    .priority-urgent {
+        background: #f7dfdf;
+        color: #b52f2f;
+        font-weight: bold;
+    }
+
+    .priority-normal {
+        background: #e9edf2;
+        color: #586575;
+    }
+
+    .warranty-valid {
+        color: #18704e;
+        font-weight: bold;
+    }
+
+    .warranty-expired,
+    .warranty-none {
+        color: #c0392b;
+        font-weight: bold;
+    }
+
+    .warranty-soon {
+        color: #b36b00;
+        font-weight: bold;
+    }
+
+    /* Contract statuses */
+
+    .contract-type {
+        background: #e8f1f0;
+        color: #1a6b65;
+    }
+
+    .contract-active {
+        background: #e5f3ee;
+        color: #18704e;
+    }
+
+    .contract-expired {
+        background: #f0e5e5;
+        color: #8a4242;
+    }
+
+    .contract-cancelled {
+        background: #e9edf2;
+        color: #586575;
+    }
+
+    /* =========================
+       EMPTY STATE
+    ========================= */
+
+    .empty-state {
+        padding: 45px 25px;
+        text-align: center;
+        color: #737d7f;
+    }
+
+    .empty-state-title {
+        font-size: 17px;
+        font-weight: bold;
+        margin-bottom: 7px;
+        color: #4e595b;
+    }
+
+    /* =========================
+       PRINT
+    ========================= */
+
+    @media print {
+        body {
+            background: white;
+        }
+
+        .header,
+        .ribbon,
+        .generator-card,
+        .btn-print {
+            display: none !important;
+        }
+
+        .container {
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .results-card {
+            box-shadow: none;
+            border: none;
+        }
+
+        .results-header {
+            border-bottom: 2px solid #333;
+        }
+
+        table {
+            min-width: 0;
+        }
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 950px) {
+        .form-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .ribbon {
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            white-space: nowrap;
+        }
+    }
+
+    @media (max-width: 650px) {
+        .header {
+            padding: 0 18px;
+        }
+
+        .brand-text {
+            font-size: 21px;
+        }
+
+        .brand-a {
+            font-size: 42px;
+        }
+
+        .container {
+            padding: 0 15px 35px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .button-row {
+            flex-wrap: wrap;
+        }
+
+        .results-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<div class="header">
+    <div class="brand">
+        <div class="brand-a">A</div>
+        <div class="brand-text">IT Asset Manager</div>
+    </div>
+</div>
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<div class="ribbon">
+
+    <a href="{% url 'dashboard' %}" class="nav-item">
+        Dashboard
+    </a>
+
+    <a href="/admin/core/asset/" class="nav-item">
+        Assets
+    </a>
+
+    <a href="/admin/core/request/" class="nav-item">
+        Requests
+    </a>
+
+    <a href="{% url 'reports' %}" class="nav-item active">
+        Reports
+    </a>
+
+    <a href="/admin/core/location/" class="nav-item">
+        Locations
+    </a>
+
+    <a href="/admin/core/contract/" class="nav-item">
+        Contracts
+    </a>
+
+</div>
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<div class="container">
+
+    <div class="page-title">
+        Reports
+    </div>
+
+    <div class="page-subtitle">
+        Generate professional reports using the available filters.
+    </div>
+
+    <!-- =========================
+         REPORT GENERATOR
+    ========================= -->
+
+    <div class="generator-card">
+
+        <div class="card-header">
+            Report Generator
+            <span>Select a report type and apply the required filters.</span>
+        </div>
+
+        <div class="generator-body">
+
+            <form method="get" action="{% url 'reports' %}">
+
+                <!-- REPORT TYPE -->
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="report_type">
+                            Report Type
+                        </label>
+
+                        <select
+                            name="report_type"
+                            id="report_type"
+                            onchange="changeReportType()"
+                        >
+
+                            {% for value, label in report_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if report_type == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- =========================
+                     ASSET / WARRANTY FILTERS
+                ========================= -->
+
+                <div
+                    id="assetFilters"
+                    class="filter-section
+                    {% if report_type == 'assets' or report_type == 'warranty' %}visible{% endif %}"
+                >
+
+                    <div class="filter-title">
+                        Asset Filters
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="category">
+                                Asset Type / Category
+                            </label>
+
+                            <select name="category" id="category">
+
+                                <option value="">
+                                    All Categories
+                                </option>
+
+                                {% for category in categories %}
+
+                                    <option
+                                        value="{{ category.id }}"
+                                        {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ category.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="unit">
+                                Faculty / Unit
+                            </label>
+
+                            <select name="unit" id="unit">
+
+                                <option value="">
+                                    All Units
+                                </option>
+
+                                {% for unit in units %}
+
+                                    <option
+                                        value="{{ unit.id }}"
+                                        {% if selected_unit == unit.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ unit.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="building">
+                                Building
+                            </label>
+
+                            <select name="building" id="building">
+
+                                <option value="">
+                                    All Buildings
+                                </option>
+
+                                {% for building in buildings %}
+
+                                    <option
+                                        value="{{ building.id }}"
+                                        {% if selected_building == building.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ building.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="floor">
+                                Floor
+                            </label>
+
+                            <select name="floor" id="floor">
+
+                                <option value="">
+                                    All Floors
+                                </option>
+
+                                {% for floor in floors %}
+
+                                    <option
+                                        value="{{ floor.id }}"
+                                        {% if selected_floor == floor.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ floor.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="area">
+                                Area / Room
+                            </label>
+
+                            <select name="area" id="area">
+
+                                <option value="">
+                                    All Areas
+                                </option>
+
+                                {% for area in areas %}
+
+                                    <option
+                                        value="{{ area.id }}"
+                                        {% if selected_area == area.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ area.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="status">
+                                Asset Status
+                            </label>
+
+                            <select name="status" id="status">
+
+                                <option value="">
+                                    All Statuses
+                                </option>
+
+                                {% for value, label in status_choices %}
+
+                                    <option
+                                        value="{{ value }}"
+                                        {% if selected_status == value %}selected{% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="warranty">
+                                Warranty
+                            </label>
+
+                            <select name="warranty" id="warranty">
+
+                                <option value="">
+                                    All Warranty Conditions
+                                </option>
+
+                                {% for value, label in warranty_choices %}
+
+                                    <option
+                                        value="{{ value }}"
+                                        {% if selected_warranty == value %}selected{% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- =========================
+                     REQUEST FILTERS
+                ========================= -->
+
+                <div
+                    id="requestFilters"
+                    class="filter-section
+                    {% if report_type == 'requests' %}visible{% endif %}"
+                >
+
+                    <div class="filter-title">
+                        Request Filters
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="request_status">
+                                Request Status
+                            </label>
+
+                            <select
+                                name="request_status"
+                                id="request_status"
+                            >
+
+                                <option value="">
+                                    All Request Statuses
+                                </option>
+
+                                {% for value, label in request_status_choices %}
+
+                                    <option
+                                        value="{{ value }}"
+                                        {% if selected_request_status == value %}selected{% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="request_priority">
+                                Priority
+                            </label>
+
+                            <select
+                                name="request_priority"
+                                id="request_priority"
+                            >
+
+                                <option value="">
+                                    All Priorities
+                                </option>
+
+                                {% for value, label in request_priority_choices %}
+
+                                    <option
+                                        value="{{ value }}"
+                                        {% if selected_request_priority == value %}selected{% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="request_unit">
+                                Requesting Unit
+                            </label>
+
+                            <select
+                                name="request_unit"
+                                id="request_unit"
+                            >
+
+                                <option value="">
+                                    All Units
+                                </option>
+
+                                {% for unit in units %}
+
+                                    <option
+                                        value="{{ unit.id }}"
+                                        {% if selected_request_unit == unit.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ unit.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- =========================
+                     LOCATION FILTERS
+                ========================= -->
+
+                <div
+                    id="locationFilters"
+                    class="filter-section
+                    {% if report_type == 'locations' %}visible{% endif %}"
+                >
+
+                    <div class="filter-title">
+                        Location Filters
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="location_type">
+                                Location Type
+                            </label>
+
+                            <select
+                                name="location_type"
+                                id="location_type"
+                            >
+
+                                <option value="">
+                                    All Location Types
+                                </option>
+
+                                {% for value, label in location_type_choices %}
+
+                                    <option
+                                        value="{{ value }}"
+                                        {% if selected_location_type == value %}selected{% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="location_building">
+                                Building
+                            </label>
+
+                            <select
+                                name="building"
+                                id="location_building"
+                            >
+
+                                <option value="">
+                                    All Buildings
+                                </option>
+
+                                {% for building in buildings %}
+
+                                    <option
+                                        value="{{ building.id }}"
+                                        {% if selected_building == building.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ building.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- =========================
+                     CONTRACT FILTERS
+                ========================= -->
+
+                <div
+                    id="contractFilters"
+                    class="filter-section
+                    {% if report_type == 'contracts' %}visible{% endif %}"
+                >
+
+                    <div class="filter-title">
+                        Contract Filters
+                    </div>
+
+                    <div class="form-grid">
+
+                        <!-- SEARCH -->
+
+                        <div class="form-group">
+
+                            <label for="contract_search">
+                                Search Contract
+                            </label>
+
+                            <input
+                                type="text"
+                                name="contract_search"
+                                id="contract_search"
+                                value="{{ selected_contract_search }}"
+                                placeholder="Title, number, provider..."
+                            >
+
+                        </div>
+
+                        <!-- CONTRACT TYPE -->
+
+                        <div class="form-group">
+
+                            <label for="contract_type">
+                                Contract Type
+                            </label>
+
+                            <select
+                                name="contract_type"
+                                id="contract_type"
+                            >
+
+                                <option value="">
+                                    All Contract Types
+                                </option>
+
+                                {% for value, label in contract_type_choices %}
+
+                                    <option
+                                        value="{{ value }}"
+                                        {% if selected_contract_type == value %}selected{% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <!-- PROVIDER -->
+
+                        <div class="form-group">
+
+                            <label for="contract_provider">
+                                Provider / Company
+                            </label>
+
+                            <input
+                                type="text"
+                                name="contract_provider"
+                                id="contract_provider"
+                                value="{{ selected_contract_provider }}"
+                                placeholder="Provider or company name"
+                            >
+
+                        </div>
+
+                        <!-- STATUS -->
+
+                        <div class="form-group">
+
+                            <label for="contract_status">
+                                Contract Status
+                            </label>
+
+                            <select
+                                name="contract_status"
+                                id="contract_status"
+                            >
+
+                                <option value="">
+                                    All Contract Statuses
+                                </option>
+
+                                {% for value, label in contract_status_choices %}
+
+                                    <option
+                                        value="{{ value }}"
+                                        {% if selected_contract_status == value %}selected{% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <!-- START DATE FROM -->
+
+                        <div class="form-group">
+
+                            <label for="contract_start_from">
+                                Start Date From
+                            </label>
+
+                            <input
+                                type="date"
+                                name="contract_start_from"
+                                id="contract_start_from"
+                                value="{{ selected_contract_start_from }}"
+                            >
+
+                        </div>
+
+                        <!-- END DATE TO -->
+
+                        <div class="form-group">
+
+                            <label for="contract_end_to">
+                                End Date To
+                            </label>
+
+                            <input
+                                type="date"
+                                name="contract_end_to"
+                                id="contract_end_to"
+                                value="{{ selected_contract_end_to }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- =========================
+                     BUTTONS
+                ========================= -->
+
+                <div class="button-row">
+
+                    <button
+                        type="submit"
+                        class="btn btn-generate"
+                    >
+                        Generate Report
+                    </button>
+
+                    <a
+                        href="{% url 'reports' %}"
+                        class="btn btn-clear"
+                    >
+                        Clear Filters
+                    </a>
+
+                    <button
+                        type="button"
+                        class="btn btn-print"
+                        onclick="window.print()"
+                    >
+                        Print Report
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+         RESULTS
+    ========================= -->
+
+    <div class="results-card">
+
+        <div class="results-header">
+
+            <div>
+
+                <div class="results-title">
+                    {{ report_title }}
+                </div>
+
+                <div class="results-description">
+                    {{ report_description }}
+                </div>
+
+            </div>
+
+            <div class="results-count">
+                {{ report_count }} result{{ report_count|pluralize }}
+            </div>
+
+        </div>
+
+        <!-- =================================================
+             ASSET / WARRANTY RESULTS
+        ================================================== -->
+
+        {% if report_type == "assets" or report_type == "warranty" %}
+
+            {% if assets %}
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Asset ID</th>
+                                <th>Asset Name</th>
+                                <th>Category</th>
+                                <th>Used In</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Warranty</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for asset in assets %}
+
+                                <tr>
+
+                                    <td class="asset-id">
+                                        {{ asset.asset_id }}
+                                    </td>
+
+                                    <td>
+                                        {{ asset.name }}
+                                    </td>
+
+                                    <td>
+                                        {% if asset.category %}
+                                            {{ asset.category.name }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if asset.used_in %}
+                                            {{ asset.used_in.name }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if asset.location %}
+                                            {{ asset.location.name }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+
+                                        {% if asset.status == "ACTIVE" %}
+
+                                            <span class="status status-active">
+                                                Active
+                                            </span>
+
+                                        {% elif asset.status == "IN_REPAIR" %}
+
+                                            <span class="status status-repair">
+                                                In Repair
+                                            </span>
+
+                                        {% elif asset.status == "IN_STORAGE" %}
+
+                                            <span class="status status-storage">
+                                                In Storage
+                                            </span>
+
+                                        {% elif asset.status == "RETIRED" %}
+
+                                            <span class="status status-retired">
+                                                Retired
+                                            </span>
+
+                                        {% else %}
+
+                                            {{ asset.status }}
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if not asset.warranty_expiry %}
+
+                                            <span class="warranty-none">
+                                                No Warranty
+                                            </span>
+
+                                        {% elif asset.warranty_expiry < today %}
+
+                                            <span class="warranty-expired">
+                                                Expired
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="warranty-valid">
+                                                {{ asset.warranty_expiry|date:"M d, Y" }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-title">
+                        No Assets Found
+                    </div>
+
+                    No assets match the selected report filters.
+
+                </div>
+
+            {% endif %}
+
+        <!-- =================================================
+             REQUEST RESULTS
+        ================================================== -->
+
+        {% elif report_type == "requests" %}
+
+            {% if requests %}
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Request</th>
+                                <th>Title</th>
+                                <th>Requesting Unit</th>
+                                <th>Requester</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for item in requests %}
+
+                                <tr>
+
+                                    <td class="asset-id">
+                                        REQ-{{ item.id|stringformat:"06d" }}
+                                    </td>
+
+                                    <td>
+                                        {{ item.title }}
+                                    </td>
+
+                                    <td>
+                                        {% if item.requester %}
+                                            {{ item.requester.name }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if item.requester_profile %}
+                                            {{ item.requester_profile.name }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+
+                                        {% if item.priority == "URGENT" %}
+
+                                            <span class="status priority-urgent">
+                                                Urgent
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="status priority-normal">
+                                                Normal
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if item.status == "NEW" %}
+
+                                            <span class="status status-new">
+                                                New
+                                            </span>
+
+                                        {% elif item.status == "IN_PROGRESS" %}
+
+                                            <span class="status status-progress">
+                                                In Progress
+                                            </span>
+
+                                        {% elif item.status == "COMPLETED" %}
+
+                                            <span class="status status-completed">
+                                                Completed
+                                            </span>
+
+                                        {% elif item.status == "CANCELLED" %}
+
+                                            <span class="status status-cancelled">
+                                                Cancelled
+                                            </span>
+
+                                        {% else %}
+
+                                            {{ item.status }}
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+                                        {{ item.created_at|date:"M d, Y H:i" }}
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-title">
+                        No Requests Found
+                    </div>
+
+                    No requests match the selected report filters.
+
+                </div>
+
+            {% endif %}
+
+        <!-- =================================================
+             LOCATION RESULTS
+        ================================================== -->
+
+        {% elif report_type == "locations" %}
+
+            {% if location_results %}
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Location</th>
+                                <th>Type</th>
+                                <th>Parent Location</th>
+                                <th>Description</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for location in location_results %}
+
+                                <tr>
+
+                                    <td class="asset-id">
+                                        {{ location.name }}
+                                    </td>
+
+                                    <td>
+
+                                        {% if location.location_type == "BUILDING" %}
+
+                                            <span class="status status-active">
+                                                Building
+                                            </span>
+
+                                        {% elif location.location_type == "FLOOR" %}
+
+                                            <span class="status status-new">
+                                                Floor
+                                            </span>
+
+                                        {% elif location.location_type == "AREA" %}
+
+                                            <span class="status status-storage">
+                                                Area / Room
+                                            </span>
+
+                                        {% elif location.location_type == "OUTDOOR" %}
+
+                                            <span class="status status-repair">
+                                                Outdoor
+                                            </span>
+
+                                        {% else %}
+
+                                            {{ location.location_type }}
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if location.parent %}
+                                            {{ location.parent.name }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if location.description %}
+                                            {{ location.description }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-title">
+                        No Locations Found
+                    </div>
+
+                    No locations match the selected report filters.
+
+                </div>
+
+            {% endif %}
+
+        <!-- =================================================
+             CONTRACT RESULTS
+        ================================================== -->
+
+        {% elif report_type == "contracts" %}
+
+            {% if contracts %}
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Contract Number</th>
+                                <th>Title</th>
+                                <th>Contract Type</th>
+                                <th>Provider / Company</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for contract in contracts %}
+
+                                <tr>
+
+                                    <td class="asset-id">
+
+                                        {% if contract.contract_number %}
+                                            {{ contract.contract_number }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+                                        {{ contract.title }}
+                                    </td>
+
+                                    <td>
+
+                                        <span class="status contract-type">
+                                            {{ contract.get_contract_type_display }}
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+                                        {{ contract.provider }}
+                                    </td>
+
+                                    <td>
+
+                                        {% if contract.start_date %}
+                                            {{ contract.start_date|date:"M d, Y" }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if contract.end_date %}
+                                            {{ contract.end_date|date:"M d, Y" }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if contract.status == "ACTIVE" %}
+
+                                            <span class="status contract-active">
+                                                Active
+                                            </span>
+
+                                        {% elif contract.status == "EXPIRED" %}
+
+                                            <span class="status contract-expired">
+                                                Expired
+                                            </span>
+
+                                        {% elif contract.status == "CANCELLED" %}
+
+                                            <span class="status contract-cancelled">
+                                                Cancelled
+                                            </span>
+
+                                        {% else %}
+
+                                            {{ contract.get_status_display }}
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-title">
+                        No Contracts Found
+                    </div>
+
+                    No contracts match the selected report filters.
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+    function changeReportType() {
+
+        const reportType =
+            document.getElementById("report_type").value;
+
+        const assetFilters =
+            document.getElementById("assetFilters");
+
+        const requestFilters =
+            document.getElementById("requestFilters");
+
+        const locationFilters =
+            document.getElementById("locationFilters");
+
+        const contractFilters =
+            document.getElementById("contractFilters");
+
+        assetFilters.classList.remove("visible");
+        requestFilters.classList.remove("visible");
+        locationFilters.classList.remove("visible");
+        contractFilters.classList.remove("visible");
+
+        if (
+            reportType === "assets" ||
+            reportType === "warranty"
+        ) {
+
+            assetFilters.classList.add("visible");
+
+        }
+
+        else if (
+            reportType === "requests"
+        ) {
+
+            requestFilters.classList.add("visible");
+
+        }
+
+        else if (
+            reportType === "locations"
+        ) {
+
+            locationFilters.classList.add("visible");
+
+        }
+
+        else if (
+            reportType === "contracts"
+        ) {
+
+            contractFilters.classList.add("visible");
+
+        }
+
+    }
+
+</script>
+
+</body>
+</html>
+

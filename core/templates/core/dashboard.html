@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>IT Asset Management System Dashboard</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f3f5f6;
+        color: #333;
+    }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+
+    .header {
+        background-color: #1a6b65;
+        color: white;
+        padding: 18px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 78px;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .brand-icon {
+        width: 42px;
+        height: 42px;
+        border: 2px solid rgba(255,255,255,0.75);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .brand-text h1 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 0.2px;
+    }
+
+    .brand-text p {
+        margin: 4px 0 0;
+        font-size: 12px;
+        opacity: 0.85;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .header-user {
+        text-align: right;
+        font-size: 13px;
+    }
+
+    .header-user strong {
+        display: block;
+        font-size: 14px;
+    }
+
+    .header-user span {
+        opacity: 0.8;
+    }
+
+    .logout-button {
+        background-color: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.35);
+        color: white;
+        padding: 8px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .logout-button:hover {
+        background-color: rgba(255,255,255,0.22);
+    }
+
+    /* =========================================================
+       NAVIGATION
+       ========================================================= */
+
+    .navigation {
+        background-color: #1c1b1a;
+        min-height: 52px;
+        padding: 0 30px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        border-bottom: 3px solid #e68729;
+    }
+
+    .navigation a {
+        padding: 17px 18px;
+        text-decoration: none;
+        color: #e6e6e6;
+        font-size: 13px;
+        font-weight: bold;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -3px;
+    }
+
+    .navigation a:hover {
+        color: white;
+        background-color: #2b2a29;
+        border-bottom-color: #e68729;
+    }
+
+    .navigation a.active {
+        color: white;
+        background-color: #2b2a29;
+        border-bottom-color: #e68729;
+    }
+
+    /* =========================================================
+       PAGE
+       ========================================================= */
+
+    .page {
+        padding: 26px 30px 40px;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    /* =========================================================
+       WELCOME
+       ========================================================= */
+
+    .welcome-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+    }
+
+    .welcome-header h2 {
+        margin: 0;
+        color: #333;
+        font-size: 23px;
+    }
+
+    .welcome-header p {
+        margin: 5px 0 0;
+        color: #777;
+        font-size: 13px;
+    }
+
+    .welcome-date {
+        text-align: right;
+        color: #666;
+        line-height: 1.4;
+    }
+
+    .welcome-date .day {
+        font-size: 14px;
+        font-weight: bold;
+        color: #1a6b65;
+    }
+
+    .welcome-date .date {
+        font-size: 12px;
+    }
+
+    /* =========================================================
+       STATISTICS
+       ========================================================= */
+
+    .statistics-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 13px;
+        margin-bottom: 22px;
+    }
+
+    .stat-card {
+        background-color: white;
+        border-radius: 8px;
+        padding: 17px 16px;
+        box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+        border-top: 4px solid #1a6b65;
+        min-height: 120px;
+        position: relative;
+    }
+
+    .stat-card.warning {
+        border-top-color: #e68729;
+    }
+
+    .stat-card.danger {
+        border-top-color: #c0392b;
+    }
+
+    .stat-card.request {
+        border-top-color: #59636a;
+    }
+
+    .stat-title {
+        color: #666;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 9px;
+    }
+
+    .stat-number {
+        color: #222;
+        font-size: 30px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .stat-description {
+        color: #888;
+        font-size: 11px;
+        margin-top: 9px;
+    }
+
+    .stat-icon {
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        font-size: 22px;
+        color: #1a6b65;
+        opacity: 0.65;
+    }
+
+    .warning .stat-icon {
+        color: #e68729;
+    }
+
+    .danger .stat-icon {
+        color: #c0392b;
+    }
+
+    .request .stat-icon {
+        color: #59636a;
+    }
+
+    /* =========================================================
+       MAIN TWO-COLUMN AREA
+       ========================================================= */
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 275px;
+        gap: 20px;
+        align-items: start;
+    }
+
+    /* =========================================================
+       SEARCH PANEL
+       ========================================================= */
+
+    .search-panel {
+        background-color: white;
+        padding: 22px;
+        border-radius: 8px;
+        box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+        margin-bottom: 20px;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        color: #1a6b65;
+        font-size: 18px;
+    }
+
+    .section-heading p {
+        margin: 0;
+        color: #888;
+        font-size: 11px;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-group label {
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #444;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 10px;
+        border: 1px solid #ccd1d3;
+        border-radius: 5px;
+        background-color: white;
+        font-size: 13px;
+        width: 100%;
+        color: #333;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+        outline: none;
+        border-color: #1a6b65;
+        box-shadow: 0 0 0 2px rgba(26,107,101,0.10);
+    }
+
+    .search-actions {
+        margin-top: 18px;
+        display: flex;
+        gap: 9px;
+    }
+
+    .search-button {
+        background-color: #1a6b65;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .search-button:hover {
+        background-color: #155a55;
+    }
+
+    .clear-button {
+        background-color: #687176;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 13px;
+    }
+
+    .clear-button:hover {
+        background-color: #555d61;
+    }
+
+    /* =========================================================
+       ATTENTION PANEL
+       ========================================================= */
+
+    .attention-panel {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+        overflow: hidden;
+    }
+
+    .attention-header {
+        background-color: #3f4242;
+        color: white;
+        padding: 14px 16px;
+    }
+
+    .attention-header h3 {
+        margin: 0;
+        font-size: 15px;
+    }
+
+    .attention-header p {
+        margin: 4px 0 0;
+        font-size: 11px;
+        color: #d4d4d4;
+    }
+
+    .attention-item {
+        padding: 14px 16px;
+        border-bottom: 1px solid #e5e5e5;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .attention-item:last-child {
+        border-bottom: none;
+    }
+
+    .attention-icon {
+        width: 31px;
+        height: 31px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+
+    .attention-icon.red {
+        background-color: #f5dddd;
+        color: #b53232;
+    }
+
+    .attention-icon.orange {
+        background-color: #f9ead7;
+        color: #b86a17;
+    }
+
+    .attention-icon.gray {
+        background-color: #e7e9eb;
+        color: #59636a;
+    }
+
+    .attention-text strong {
+        display: block;
+        font-size: 12px;
+        color: #333;
+    }
+
+    .attention-text span {
+        display: block;
+        margin-top: 3px;
+        font-size: 11px;
+        color: #888;
+    }
+
+    /* =========================================================
+       RESULTS
+       ========================================================= */
+
+    .results-section {
+        background-color: white;
+        padding: 22px;
+        border-radius: 8px;
+        box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+        overflow-x: auto;
+    }
+
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .results-header h2 {
+        margin: 0;
+        color: #1a6b65;
+        font-size: 18px;
+    }
+
+    .result-count {
+        font-size: 12px;
+        color: #777;
+        background-color: #f0f2f2;
+        padding: 6px 10px;
+        border-radius: 4px;
+    }
+
+    .asset-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 850px;
+    }
+
+    .asset-table th {
+        background-color: #3f4242;
+        color: white;
+        padding: 11px 10px;
+        text-align: left;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .asset-table td {
+        padding: 11px 10px;
+        border-bottom: 1px solid #e1e3e4;
+        font-size: 12px;
+        vertical-align: middle;
+    }
+
+    .asset-table tbody tr:nth-child(even) {
+        background-color: #f7f8f8;
+    }
+
+    .asset-table tbody tr:hover {
+        background-color: #eef5f4;
+    }
+
+    .asset-id {
+        color: #1a6b65;
+        font-weight: bold;
+    }
+
+    /* =========================================================
+       STATUS LABELS
+       ========================================================= */
+
+    .status-label {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .status-active {
+        background-color: #d9f0e8;
+        color: #17634e;
+    }
+
+    .status-repair {
+        background-color: #fff0d9;
+        color: #a05a00;
+    }
+
+    .status-storage {
+        background-color: #e7e9ed;
+        color: #555;
+    }
+
+    .status-retired {
+        background-color: #f1dddd;
+        color: #9b2c2c;
+    }
+
+    /* =========================================================
+       WARRANTY LABELS
+       ========================================================= */
+
+    .warranty-valid {
+        color: #17634e;
+        font-weight: bold;
+    }
+
+    .warranty-expired {
+        color: #c0392b;
+        font-weight: bold;
+    }
+
+    .warranty-none {
+        color: #c0392b;
+        font-weight: bold;
+    }
+
+    /* =========================================================
+       EMPTY RESULTS
+       ========================================================= */
+
+    .no-results {
+        text-align: center;
+        padding: 35px 20px;
+        color: #777;
+        font-size: 13px;
+    }
+
+    .no-results-icon {
+        font-size: 28px;
+        color: #aaa;
+        margin-bottom: 8px;
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    .footer {
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px solid #ddd;
+        text-align: center;
+        color: #999;
+        font-size: 11px;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1200px) {
+        .statistics-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .main-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .attention-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .attention-header {
+            grid-column: 1 / -1;
+        }
+
+        .attention-item {
+            border-bottom: none;
+            border-right: 1px solid #e5e5e5;
+        }
+
+        .attention-item:last-child {
+            border-right: none;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .filter-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .navigation {
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .header {
+            padding: 15px 18px;
+        }
+
+        .header-right {
+            display: none;
+        }
+
+        .navigation {
+            padding: 0 12px;
+        }
+
+        .navigation a {
+            padding: 15px 11px;
+        }
+
+        .page {
+            padding: 20px 15px 30px;
+        }
+
+        .statistics-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .filter-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .welcome-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .welcome-date {
+            text-align: left;
+        }
+
+        .attention-panel {
+            display: block;
+        }
+
+        .attention-item {
+            border-right: none;
+            border-bottom: 1px solid #e5e5e5;
+        }
+    }
+
+    @media (max-width: 450px) {
+        .statistics-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<div class="header">
+
+<div class="brand">
+
+
+<div class="brand-icon">
+    A
+</div>
+
+<div class="brand-text">
+    <h1>IT Asset Manager</h1>
+    <p>IT Asset Management & Control System</p>
+</div>
+
+
+</div>
+
+<div class="header-right">
+
+
+<div class="header-user">
+    <strong>IT Manager</strong>
+    <span>Management Dashboard</span>
+</div>
+
+<form method="post" action="/logout/">
+    {% csrf_token %}
+    <button type="submit" class="logout-button">
+        Logout
+    </button>
+</form>
+
+
+</div>
+
+</div>
+
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
+
+<div class="navigation">
+
+<a href="/dashboard/" class="active">
+    Dashboard
+</a>
+
+<a href="/admin/core/asset/">
+    Assets
+</a>
+
+<a href="/admin/core/request/">
+    Requests
+</a>
+
+<a href="#">
+    Reports
+</a>
+
+<a href="/admin/core/location/">
+    Locations
+</a>
+
+<a href="#">
+    Contracts
+</a>
+
+</div>
+
+<!-- =========================================================
+     PAGE
+     ========================================================= -->
+
+<div class="page">
+
+<!-- =====================================================
+     WELCOME
+     ===================================================== -->
+
+<div class="welcome-header">
+
+
+<div>
+    <h2>Welcome, IT Manager</h2>
+    <p>Monitor your IT assets, requests, locations and warranty status.</p>
+</div>
+
+<div class="welcome-date">
+
+    <div class="day">
+        {% now "l" %}
+    </div>
+
+    <div class="date">
+        {% now "j F Y" %}
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- =====================================================
+     STATISTICS
+     ===================================================== -->
+
+<div class="statistics-grid">
+
+
+<div class="stat-card">
+
+    <div class="stat-icon">▣</div>
+
+    <div class="stat-title">
+        TOTAL ASSETS
+    </div>
+
+    <div class="stat-number">
+        {{ total_assets }}
+    </div>
+
+    <div class="stat-description">
+        Registered IT assets
+    </div>
+
+</div>
+
+<div class="stat-card">
+
+    <div class="stat-icon">⚒</div>
+
+    <div class="stat-title">
+        IN REPAIR
+    </div>
+
+    <div class="stat-number">
+        {{ in_repair }}
+    </div>
+
+    <div class="stat-description">
+        Assets currently being repaired
+    </div>
+
+</div>
+
+<div class="stat-card">
+
+    <div class="stat-icon">▤</div>
+
+    <div class="stat-title">
+        IN STORAGE
+    </div>
+
+    <div class="stat-number">
+        {{ in_storage }}
+    </div>
+
+    <div class="stat-description">
+        Assets currently in storage
+    </div>
+
+</div>
+
+<div class="stat-card warning">
+
+    <div class="stat-icon">◇</div>
+
+    <div class="stat-title">
+        WARRANTY EXPIRING
+    </div>
+
+    <div class="stat-number">
+        {{ warranty_expiring }}
+    </div>
+
+    <div class="stat-description">
+        Expiring within 10 days
+    </div>
+
+</div>
+
+<div class="stat-card danger">
+
+    <div class="stat-icon">⚠</div>
+
+    <div class="stat-title">
+        EXPIRED WARRANTY
+    </div>
+
+    <div class="stat-number">
+        {{ expired_warranty }}
+    </div>
+
+    <div class="stat-description">
+        Requires attention
+    </div>
+
+</div>
+
+<div class="stat-card request">
+
+    <div class="stat-icon">☷</div>
+
+    <div class="stat-title">
+        NEW REQUESTS
+    </div>
+
+    <div class="stat-number">
+        {{ new_requests }}
+    </div>
+
+    <div class="stat-description">
+        Waiting for IT Manager
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- =====================================================
+     MAIN CONTENT
+     ===================================================== -->
+
+<div class="main-grid">
+
+
+<!-- =================================================
+     LEFT / MAIN COLUMN
+     ================================================= -->
+
+<div>
+
+    <!-- =============================================
+         SEARCH
+         ============================================= -->
+
+    <div class="search-panel">
+
+        <div class="section-heading">
+
+            <div>
+                <h2>Asset Search & Filter</h2>
+            </div>
+
+            <p>Find assets by identification, unit or location</p>
+
+        </div>
+
+        <form method="get" action="/dashboard/">
+
+            <div class="filter-grid">
+
+                <div class="filter-group">
+
+                    <label for="search">
+                        Search
+                    </label>
+
+                    <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Asset ID, name, serial number..."
+                    >
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label for="category">
+                        Asset Type
+                    </label>
+
+                    <select id="category" name="category">
+
+                        <option value="">
+                            All Asset Types
+                        </option>
+
+                        {% for category in categories %}
+
+                            <option
+                                value="{{ category.id }}"
+                                {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ category.name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label for="unit">
+                        Used In / Unit
+                    </label>
+
+                    <select id="unit" name="unit">
+
+                        <option value="">
+                            All Units
+                        </option>
+
+                        {% for unit in units %}
+
+                            <option
+                                value="{{ unit.id }}"
+                                {% if selected_unit == unit.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ unit.name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label for="building">
+                        Building
+                    </label>
+
+                    <select id="building" name="building">
+
+                        <option value="">
+                            All Buildings
+                        </option>
+
+                        {% for building in buildings %}
+
+                            <option
+                                value="{{ building.id }}"
+                                {% if selected_building == building.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ building.name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label for="floor">
+                        Floor
+                    </label>
+
+                    <select id="floor" name="floor">
+
+                        <option value="">
+                            All Floors
+                        </option>
+
+                        {% for floor in floors %}
+
+                            <option
+                                value="{{ floor.id }}"
+                                {% if selected_floor == floor.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ floor.name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label for="area">
+                        Room / Area
+                    </label>
+
+                    <select id="area" name="area">
+
+                        <option value="">
+                            All Rooms / Areas
+                        </option>
+
+                        {% for area in areas %}
+
+                            <option
+                                value="{{ area.id }}"
+                                {% if selected_area == area.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ area.name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <select id="status" name="status">
+
+                        <option value="">
+                            All Statuses
+                        </option>
+
+                        {% for value, label in status_choices %}
+
+                            <option
+                                value="{{ value }}"
+                                {% if selected_status == value %}selected{% endif %}
+                            >
+                                {{ label }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label for="warranty">
+                        Warranty
+                    </label>
+
+                    <select id="warranty" name="warranty">
+
+                        <option value="">
+                            All Warranty Statuses
+                        </option>
+
+                        <option
+                            value="NO_WARRANTY"
+                            {% if selected_warranty == "NO_WARRANTY" %}selected{% endif %}
+                        >
+                            No Warranty
+                        </option>
+
+                        <option
+                            value="EXPIRED"
+                            {% if selected_warranty == "EXPIRED" %}selected{% endif %}
+                        >
+                            Expired
+                        </option>
+
+                        <option
+                            value="EXPIRING"
+                            {% if selected_warranty == "EXPIRING" %}selected{% endif %}
+                        >
+                            Expiring Soon
+                        </option>
+
+                        <option
+                            value="VALID"
+                            {% if selected_warranty == "VALID" %}selected{% endif %}
+                        >
+                            Valid
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="search-actions">
+
+                <button type="submit" class="search-button">
+                    Search
+                </button>
+
+                <a href="/dashboard/" class="clear-button">
+                    Clear
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- =============================================
+         ASSET RESULTS
+         ============================================= -->
+
+    <div class="results-section">
+
+        <div class="results-header">
+
+            <h2>Asset Results</h2>
+
+            <div class="result-count">
+                {{ assets|length }} asset(s) found
+            </div>
+
+        </div>
+
+        {% if assets %}
+
+            <table class="asset-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Asset ID</th>
+                        <th>Asset Name</th>
+                        <th>Type</th>
+                        <th>Used In</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Warranty</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for asset in assets %}
+
+                        <tr>
+
+                            <td>
+                                <span class="asset-id">
+                                    {{ asset.asset_id }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <strong>
+                                    {{ asset.name }}
+                                </strong>
+                            </td>
+
+                            <td>
+
+                                {% if asset.category %}
+                                    {{ asset.category.name }}
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if asset.used_in %}
+                                    {{ asset.used_in.name }}
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if asset.location %}
+                                    {{ asset.location.name }}
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if asset.status == "ACTIVE" %}
+
+                                    <span class="status-label status-active">
+                                        Active
+                                    </span>
+
+                                {% elif asset.status == "IN_REPAIR" %}
+
+                                    <span class="status-label status-repair">
+                                        In Repair
+                                    </span>
+
+                                {% elif asset.status == "IN_STORAGE" %}
+
+                                    <span class="status-label status-storage">
+                                        In Storage
+                                    </span>
+
+                                {% elif asset.status == "RETIRED" %}
+
+                                    <span class="status-label status-retired">
+                                        Retired
+                                    </span>
+
+                                {% else %}
+
+                                    {{ asset.status }}
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if not asset.warranty_expiry %}
+
+                                    <span class="warranty-none">
+                                        No Warranty
+                                    </span>
+
+                                {% elif asset.warranty_status == "Expired" %}
+
+                                    <span class="warranty-expired">
+                                        Expired
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="warranty-valid">
+                                        {{ asset.warranty_expiry }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% else %}
+
+            <div class="no-results">
+
+                <div class="no-results-icon">
+                    ◇
+                </div>
+
+                No assets match the selected search criteria.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<!-- =================================================
+     RIGHT / ATTENTION COLUMN
+     ================================================= -->
+
+<div class="attention-panel">
+
+    <div class="attention-header">
+
+        <h3>Attention & Alerts</h3>
+
+        <p>Items that may require IT Manager action</p>
+
+    </div>
+
+    <div class="attention-item">
+
+        <div class="attention-icon red">
+            ⚠
+        </div>
+
+        <div class="attention-text">
+
+            <strong>
+                Expired Warranty
+            </strong>
+
+            <span>
+                {{ expired_warranty }} asset(s)
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="attention-item">
+
+        <div class="attention-icon orange">
+            ◇
+        </div>
+
+        <div class="attention-text">
+
+            <strong>
+                Warranty Expiring Soon
+            </strong>
+
+            <span>
+                {{ warranty_expiring }} asset(s)
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="attention-item">
+
+        <div class="attention-icon gray">
+            ☷
+        </div>
+
+        <div class="attention-text">
+
+            <strong>
+                New Requests
+            </strong>
+
+            <span>
+                {{ new_requests }} request(s) waiting
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<div class="footer">
+
+
+IT Asset Management & Control System
+&nbsp;|&nbsp;
+IT Management
+
+
+</div>
+
+</div>
+
+</body>
+</html>
